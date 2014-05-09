@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @file
+ * Module providing fields-based views style plugin for RSS feed generation.
+ */
+
+/**
+ * Module installation path.
+ */
+
+define('FLIPBOARDRSS_PATH', drupal_get_path('module', 'flipboardrss'));
+
+/**
+ * Implements hook_views_api().
+ */
+function flipboardrss_views_api() {
+  return array(
+    'api' => 3,
+    'path' => FLIPBOARDRSS_PATH . '/views',
+  );
+}
+
+/**
+ * Preprocess callback.
+ * Replaces relative paths in element values with absolute URLs.
+ * Originates from Views RSS module, which was
+ * based on preg_match from rel_to_abs module by lourenzo,
+ * with added patch from issue #1335734 by joelstein.
+ * @see http://drupal.org/project/rel_to_abs
+ * @see http://drupal.org/node/1335734
+ */
+function flipboardrss_rewrite_relative_paths(&$variables) {
+  // Rewriting relative paths should be enabled by default,
+  // so rewrite relative paths even if option value is not set.
+  if (
+    !isset($variables['view']->style_plugin->options['feed_settings']['absolute_paths'])
+    || !empty($variables['view']->style_plugin->options['feed_settings']['absolute_paths'])
+  ) {
+    global $base_path;
+    foreach ($variables['elements'] as $delta => $element) {
+      if (isset($element['value'])) {
+        // Value is an array, so this is a set of subelements.
+        if (is_array($element['value'])) {
+          views_rss_rewrite_relative_paths($variables['elements'][$delta]['value']);
+        }
+        // Value is a string, so just process it.
+        else {
+          $pattern = '/(src|href)=(\'|")[^\/]' . preg_quote($base_path, '/') . '/';
+          $replacement = '$1=$2' . url('<front>', array('absolute' => TRUE));
+          $variables['elements'][$delta]['value'] = preg_replace($pattern, $replacement, $element['value']);
+        }
+      }
+    }
+  }
+}
