@@ -72,14 +72,13 @@ function template_preprocess_flipboardrss_view_rss(&$vars) {
 /**
  * Default theme function for all RSS rows.
  */
-function template_preprocess_flipboardrss_row_view_rss(&$vars) {
-  $view     = &$vars['view'];
-  $options  = &$vars['options'];
+function template_preprocess_flipboardrss_view_row_rss(&$vars) {
   $item     = &$vars['row'];
-
   $vars['title'] = check_plain($item->title);
   $vars['link'] = check_url($item->link);
 //  $vars['description'] = check_plain($item->description);
-  $vars['description'] = '<![CDATA[' . $item->description . ']]>';
+  $vars['description'] = $item->description;
+  $vars['content_encoded'] = $item->content_encoded;
+  $vars['image'] = '<figure>' . $item->image . '</figure>';
   $vars['item_elements'] = empty($item->elements) ? '' : format_xml_elements($item->elements);
 }

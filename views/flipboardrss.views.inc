@@ -21,92 +21,27 @@ function flipboardrss_views_plugins() {
         'theme file' => 'theme.inc',
         'theme path' => FLIPBOARDRSS_PATH . '/theme',
         'uses row plugin' => TRUE,
-//        'uses fields' => TRUE,
-        'uses options' => TRUE,
-//        'uses grouping' => FALSE,
-        'type' => 'feed',
-      ),
-      'flipboardrss_rows' => array(
-        'title' => t('RSS Feed for rows in Flipboard'),
-        'help' => t('Generates an RSS item for a single node, compatible to Flipboard'),
-        'handler' => 'flipboardrss_plugin_row_style_rss',
-        'path' => FLIPBOARDRSS_PATH . '/views',
-        'theme' => 'flipboardrss_row_view_rss',
-        'theme file' => 'theme.inc',
-        'theme path' => FLIPBOARDRSS_PATH . '/theme',
-        'uses row plugin' => TRUE,
         'uses fields' => TRUE,
         'uses options' => TRUE,
 //        'uses grouping' => FALSE,
         'type' => 'feed',
       ),
     ),
+    'row' => array(
+      'flipboardrss_fields' => array(
+        'title' => t('Fields'),
+        'help' => t('Display fields as RSS items.'),
+        'handler' => 'flipboardrss_plugin_row_rss_fields',
+        'path' => FLIPBOARDRSS_PATH . '/views',
+        'theme' => 'flipboardrss_view_row_rss',
+        'theme path' => FLIPBOARDRSS_PATH . '/theme',
+        'uses fields' => TRUE,
+        'uses options' => TRUE,
+        'type' => 'feed',
+        'help topic' => 'style-row-fields',
+      ),
+    ),
   );
 
   return $plugins;
 }
-
-/**
- * Implements hook_views_data().
- */
-function flipboardrss_views_data(&$data) {
-  $data['term_node']['term_multiple'] = array(
-//    'group' => t('Taxonomy'),
-    'title' => t('Body Content'),
-    'help'=>; t('Node body field as the content of the story.'),
-    'real field' => 'tid',
-    'filter' => array(
-      'handler' => 'flipboardrss_plugin_row_style_rss',
-//      'hierarchy table' => 'term_hierarchy',
-//      'numeric' => TRUE,
-//      'skip base' => 'term_data',
-//      'allow empty' => TRUE,
-    ),
-  );
-}
-
-
-
-
-/**
- * Implements hook_views_handlers().
- */
-/*
-function flipboardrss_views_handlers() {
-  return array(
-    'info' => array(
-      'path' => FLIPBOARDRSS_PATH . '/views',
-    ),
-    'handlers' => array(
-      'flipboardrss_handler_field_user_mail' => array(
-        'parent' => 'views_handler_field_user_mail',
-      ),
-      'flipboardrss_handler_field_term_node_tid' => array(
-        'parent' => 'views_handler_field_term_node_tid',
-      ),
-    ),
-  );
-}
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * Implements hook_views_data_alter().
- */
-/*
-function flipboardrss_views_data_alter(&$data) {
-  $data['users']['mail']['field']['handler'] = 'flipboardrss_handler_field_user_mail';
-  $data['node']['term_node_tid']['field']['handler'] = 'flipboardrss_handler_field_term_node_tid';
-}
-*/

@@ -1,8 +1,9 @@
 name = "Flipboard RSS"
 description = "Enables standard Views RSS to generate XML that meets Flipboard standards."
 package = Views
-dependencies[] = views
 core = 7.x
+dependencies[] = views
+
 files[] = views/flipboardrss.views.inc
+files[] = views/flipboardrss_plugin_row_rss_fields.inc
 files[] = views/flipboardrss_plugin_style_rss.inc
-files[] = views/flipboardrss_plugin_row_style_rss.inc

@@ -46,7 +46,7 @@ class flipboardrss_plugin_style_rss extends views_plugin_style {
     $options = parent::option_definition();
 
     $options['description'] = array('default' => '', 'translatable' => TRUE);
-    $options['content'] = array('default' => '', 'translatable' => TRUE);
+    $options['content_encoded'] = array('default' => '', 'translatable' => TRUE);
 
     return $options;
   }
@@ -56,9 +56,11 @@ class flipboardrss_plugin_style_rss extends views_plugin_style {
 
     $form['description'] = array(
       '#type' => 'textfield',
-      '#title' => t('RSS description'),
+      '#title' => t('Channel description for your RSS feed.'),
       '#default_value' => $this->options['description'],
       '#description' => t('This will appear in the RSS feed itself.'),
+      '#type' => 'textarea',
+      '#rows' => 3,
       '#maxlength' => 600,
     );
   }
