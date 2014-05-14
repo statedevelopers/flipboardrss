@@ -6,7 +6,8 @@
  */
 
 /**
- * Preprocess an RSS feed
+ * Preprocess the channel elements of an RSS feed
+ *
  */
 
 function template_preprocess_flipboardrss_view_rss(&$vars) {
@@ -14,16 +15,11 @@ function template_preprocess_flipboardrss_view_rss(&$vars) {
   global $language;
 
   $view     = &$vars['view'];
-  $options  = &$vars['options'];
   $items    = &$vars['rows'];
 
   $style    = &$view->style_plugin;
 
-  // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
-  // We strip all HTML tags, but need to prevent double encoding from properly
-  // escaped source data (such as &amp becoming &amp;amp;).
-  $vars['description'] = check_plain(strip_tags($style->get_description()));
-
+  // SET CHANNEL <title> element.
   if ($view->display_handler->get_option('sitename_title')) {
     $title = variable_get('site_name', 'Drupal');
     if ($slogan = variable_get('site_slogan', '')) {
@@ -35,6 +31,7 @@ function template_preprocess_flipboardrss_view_rss(&$vars) {
   }
   $vars['title'] = check_plain($title);
 
+  // SET CHANNEL <link> element.
   // Figure out which display which has a path we're using for this feed. If there isn't
   // one, use the global $base_url
   $link_display_id = $view->display_handler->get_link_display();
@@ -57,10 +54,20 @@ function template_preprocess_flipboardrss_view_rss(&$vars) {
     $vars['link'] = check_url(url($path, $url_options));
   }
 
+  // SET CHANNEL <description> element.
+  // The RSS 2.0 "spec" doesn't indicate HTML can be used in the description.
+  // We strip all HTML tags, but need to prevent double encoding from properly
+  // escaped source data (such as &amp becoming &amp;amp;).
+  $vars['description'] = check_plain(strip_tags($style->get_description()));
+
+  // SET CHANNEL <language> element.
   $vars['langcode'] = check_plain($language->language);
+
+  // SET CHANNEL other elements.
   $vars['namespaces'] = drupal_attributes($style->namespaces);
+
+  // SET <item> elements from results.
   $vars['items'] = $items;
-  $vars['channel_elements'] = format_xml_elements($style->channel_elements);
 
   // During live preview we don't want to output the header since the contents
   // of the feed are being displayed inside a normal HTML page.
@@ -70,15 +77,28 @@ function template_preprocess_flipboardrss_view_rss(&$vars) {
 }
 
 /**
- * Default theme function for all RSS rows.
+ * Default theme function for each views row to become a feed <item>.
+ *
  */
 function template_preprocess_flipboardrss_view_row_rss(&$vars) {
-  $item     = &$vars['row'];
+  $item = &$vars['row'];
   $vars['title'] = check_plain($item->title);
   $vars['link'] = check_url($item->link);
-//  $vars['description'] = check_plain($item->description);
-  $vars['description'] = $item->description;
-  $vars['content_encoded'] = $item->content_encoded;
-  $vars['image'] = '<figure>' . $item->image . '</figure>';
   $vars['item_elements'] = empty($item->elements) ? '' : format_xml_elements($item->elements);
+
+  // Escape description with a CDATA section wrapper.
+  $vars['description'] =
+    '<![CDATA[' .
+      $item->description .
+    ']]>';
+
+  // Combine the image inside the top of the content.
+  // Escape with a CDATA section wrapper.
+  $vars['content_encoded'] =
+    '<![CDATA[' .
+      "<figure>\n" .
+        "$item->image\n" .
+      "</figure>\n" .
+      $item->content_encoded .
+    ']]>';
 }

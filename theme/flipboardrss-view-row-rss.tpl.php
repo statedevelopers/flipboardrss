@@ -10,7 +10,7 @@
     <item>
       <title><?php print $title; ?></title>
       <link><?php print $link; ?></link>
-      <description><![CDATA[<?php print $description; ?>]]></description>
-      <content:encoded><![CDATA[<?php print $image . $content_encoded; ?>]]></content:encoded>
       <?php print $item_elements; ?>
+      <description><?php print $description; ?></description>
+      <content:encoded><?php print $content_encoded; ?></content:encoded>
     </item>
