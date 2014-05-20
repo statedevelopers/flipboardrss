@@ -9,9 +9,7 @@
  * Preprocess the channel elements of an RSS feed
  *
  */
-
 function template_preprocess_flipboardrss_view_rss(&$vars) {
-  global $base_url;
   global $language;
 
   $view     = &$vars['view'];
@@ -77,10 +75,10 @@ function template_preprocess_flipboardrss_view_rss(&$vars) {
 }
 
 /**
- * Default theme function for each views row to become a feed <item>.
+ * Preprocess the rows.
  *
  */
-function template_preprocess_flipboardrss_view_row_rss(&$vars) {
+function template_preprocess_flipboardrss_view_rss_row(&$vars) {
   $item = &$vars['row'];
   $vars['title'] = check_plain($item->title);
   $vars['link'] = check_url($item->link);
@@ -89,16 +87,16 @@ function template_preprocess_flipboardrss_view_row_rss(&$vars) {
   // Escape description with a CDATA section wrapper.
   $vars['description'] =
     '<![CDATA[' .
-      $item->description .
+    $item->description .
     ']]>';
 
   // Combine the image inside the top of the content.
   // Escape with a CDATA section wrapper.
   $vars['content_encoded'] =
     '<![CDATA[' .
-      "<figure>\n" .
-        "$item->image\n" .
-      "</figure>\n" .
-      $item->content_encoded .
+    "<figure>\n" .
+    "$item->image\n" .
+    "</figure>\n" .
+    $item->content_encoded .
     ']]>';
 }
