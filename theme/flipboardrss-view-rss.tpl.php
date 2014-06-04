@@ -14,6 +14,8 @@
   <channel>
     <title><?php print $title; ?></title>
     <link><?php print $link; ?></link>
+    <link rel="hub" href="<?php print $hub_url; ?>" xmlns="http://www.w3.org/200/Atom" />
+    <link rel="self" href="<?php print $feed_url; ?>" xmlns="http://www.w3.org/200/Atom" />
     <description><?php print $description; ?></description>
     <language><?php print $langcode; ?></language>
     <?php print $channel_elements; ?>

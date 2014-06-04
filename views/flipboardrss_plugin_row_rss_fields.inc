@@ -138,15 +138,6 @@ class flipboardrss_plugin_row_rss_fields extends views_plugin_row_rss_fields {
     if (!isset($row_index)) {
       $row_index = 0;
     }
-    if (function_exists('rdf_get_namespaces')) {
-      // Merge RDF namespaces in the XML namespaces in case they are used
-      // further in the RSS content.
-      $xml_rdf_namespaces = array();
-      foreach (rdf_get_namespaces() as $prefix => $uri) {
-        $xml_rdf_namespaces['xmlns:' . $prefix] = $uri;
-      }
-      $this->view->style_plugin->namespaces += $xml_rdf_namespaces;
-    }
 
     // Create the RSS item object.
     $item = new stdClass();
@@ -171,7 +162,6 @@ class flipboardrss_plugin_row_rss_fields extends views_plugin_row_rss_fields {
       array(
         'key' => 'dc:creator',
         'value' => $this->get_field($row_index, $this->options['creator_field']),
-        'namespace' => array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/'),
       ),
       /*array(
         'key' => 'georss:point',
@@ -187,7 +177,7 @@ class flipboardrss_plugin_row_rss_fields extends views_plugin_row_rss_fields {
 
     foreach ($item->elements as $element) {
       if (isset($element['namespace'])) {
-        $this->view->style_plugin->namespaces = array_merge($this->view->style_plugin->namespaces, $element['namespace']);
+        $this->view->style_plugin->namespaces = $element['namespace'];
       }
     }
 

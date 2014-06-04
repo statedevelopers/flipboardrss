@@ -63,6 +63,8 @@ function template_preprocess_flipboardrss_view_rss(&$vars) {
 
   // SET CHANNEL other elements.
   $vars['namespaces'] = drupal_attributes($style->namespaces);
+  $vars['hub_url'] = variable_get('flipboardrss_hub_url');
+  $vars['feed_url'] = variable_get('flipboardrss_feed_url');
 
   // SET <item> elements from results.
   $vars['items'] = $items;

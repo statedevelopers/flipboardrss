@@ -12,6 +12,74 @@
 define('FLIPBOARDRSS_PATH', drupal_get_path('module', 'flipboardrss'));
 
 /**
+ * Implements hook_help().
+ */
+function flipboardrss_help($path, $arg) {
+  return '<p>' . t('.') . '</p>';
+}
+
+/**
+ * Implements hook_menu().
+ *
+ * Set up admin settings callbacks, etc.
+ */
+function flipboardrss_menu() {
+  $items = array();
+  $items['admin/config/media/flipboardrss'] = array(
+    'title' => 'Flipboard Publishing Settings',
+    'description' => 'Define what hub to publish to.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('flipboardrss_admin_settings'),
+    'access arguments' => array('administer flipboardrss'),
+    'file' => 'flipboardrss.admin.inc',
+  );
+
+  return $items;
+}
+
+function flipboardrss_ping() {
+  $hub_url = variable_get('flipboardrss_hub_url');
+  $feed_url = variable_get('flipboardrss_feed_url');
+  $options = array(
+    'method' => 'POST',
+    'data' => array(
+      'hub.mode="publish"&hub.url="' . $feed_url . '"',
+    ),
+  );
+
+  // Send ping.
+  dvm($hub_url);
+  dvm($options);
+  $result = drupal_http_request($hub_url, $options);
+  dvm($result);
+
+  // Process HTTP response code.
+/*  switch ($result->code) {
+    case 304:
+      break;
+    case 301:
+      $feed->url = $result->redirect_url;
+    // Do not break here.
+    case 200:
+    case 302:
+    case 307:
+      if (!isset($result->data)) {
+        $result->data = '';
+      }
+      if (!isset($result->headers)) {
+        $result->headers = array();
+      }
+      $feed->source_string = $result->data;
+      $feed->http_headers = $result->headers;
+      break;
+    default:
+      watchdog('aggregator', 'The feed from %site seems to be broken, due to "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error), WATCHDOG_WARNING);
+      drupal_set_message(t('The feed from %site seems to be broken, because of error "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error)));
+  }
+*/
+}
+
+/**
  * Implements hook_views_api().
  */
 function flipboardrss_views_api() {
