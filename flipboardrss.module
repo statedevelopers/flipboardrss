@@ -42,41 +42,31 @@ function flipboardrss_ping() {
   $feed_url = variable_get('flipboardrss_feed_url');
   $options = array(
     'method' => 'POST',
-    'data' => array(
-      'hub.mode="publish"&hub.url="' . $feed_url . '"',
+    'headers' => array(
+      'content-type' => 'application/x-www-form-urlencoded',
     ),
+    'data' =>
+      "hub.mode=publish&hub.url=$feed_url"
   );
 
   // Send ping.
-  dvm($hub_url);
-  dvm($options);
   $result = drupal_http_request($hub_url, $options);
-  dvm($result);
 
   // Process HTTP response code.
-/*  switch ($result->code) {
-    case 304:
+  switch ($result->code) {
+    case 204:
+      drupal_set_message(t("Hub '%hub' has successfully received your notice of new content (result code: %code).", array('%hub' => $hub_url, '%code' => $result->code)));
+      break;
+    case 200:
+      drupal_set_message(t("Hub '%hub' has successfully received your notice of new content (result code: %code).", array('%hub' => $hub_url, '%code' => $result->code)));
       break;
     case 301:
       $feed->url = $result->redirect_url;
     // Do not break here.
-    case 200:
-    case 302:
-    case 307:
-      if (!isset($result->data)) {
-        $result->data = '';
-      }
-      if (!isset($result->headers)) {
-        $result->headers = array();
-      }
-      $feed->source_string = $result->data;
-      $feed->http_headers = $result->headers;
-      break;
     default:
-      watchdog('aggregator', 'The feed from %site seems to be broken, due to "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error), WATCHDOG_WARNING);
-      drupal_set_message(t('The feed from %site seems to be broken, because of error "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error)));
+      watchdog('aggregator', 'The ping to publish from %site seems to be broken, due to "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error), WATCHDOG_WARNING);
+      drupal_set_message(t('The ping to publish %site seems to be broken, because of error "%error".', array('%site' => $feed->title, '%error' => $result->code . ' ' . $result->error)));
   }
-*/
 }
 
 /**

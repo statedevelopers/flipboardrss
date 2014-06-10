@@ -9,8 +9,8 @@
 ?>
 <?php print "<?xml"; ?> version="2.0" encoding="utf-8" <?php print "?>\n"; ?>
 <rss version="2.0"
-    xml:base="<?php print $link; ?>"
-    <?php print $namespaces; ?>>
+  xml:base="<?php print $link; ?>"
+  <?php print $namespaces; ?>>
   <channel>
     <title><?php print $title; ?></title>
     <link><?php print $link; ?></link>
