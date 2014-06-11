@@ -87,8 +87,12 @@ class flipboardrss_plugin_style_rss extends views_plugin_style {
     }
     $rows = '';
 
-    // Populate channel RSS version
-    $this->namespaces = array('xmlns:dc' => 'http://purl.org/dc/elements/1.1/');
+    // Populate channel name spaces to allow for various syntax.
+    $this->namespaces = array(
+      'xmlns:dc' => 'http://purl.org/dc/elements/1.1/',
+      'xmlns:content' => 'http://purl.org/rss/1.0/modules/content/',
+      'xmlns:atom' => 'http://www.w3.org/2005/Atom',
+    );
 
     // Populate rows.
     foreach ($this->view->result as $row_index => $row) {
