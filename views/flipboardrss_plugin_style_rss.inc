@@ -92,6 +92,8 @@ class flipboardrss_plugin_style_rss extends views_plugin_style {
       'xmlns:dc' => 'http://purl.org/dc/elements/1.1/',
       'xmlns:content' => 'http://purl.org/rss/1.0/modules/content/',
       'xmlns:atom' => 'http://www.w3.org/2005/Atom',
+      // TODO: Add location GeoRSS
+      //'xmlns:georss' => 'http://www.georss.org/georss'
     );
 
     // Populate rows.
